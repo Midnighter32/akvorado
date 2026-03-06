@@ -175,7 +175,11 @@ const (
 	ColumnSrcGeoState
 	ColumnDstGeoState
 	ColumnSrcGeoCity
+	ColumnSrcGeoLat
+	ColumnSrcGeoLon
 	ColumnDstGeoCity
+	ColumnDstGeoLat
+	ColumnDstGeoLon
 	ColumnDstASPath
 	ColumnDst1stAS
 	ColumnDst2ndAS
@@ -384,10 +388,34 @@ END`,
 				ClickHouseGenerateFrom: "c_SrcNetworks[city]",
 			},
 			{
+				Key:                    ColumnSrcGeoLat,
+				ParserType:             "float",
+				ClickHouseType:         "Float64",
+				ClickHouseGenerateFrom: "c_SrcNetworks[latitude]",
+			},
+			{
+				Key:                    ColumnSrcGeoLon,
+				ParserType:             "float",
+				ClickHouseType:         "Float64",
+				ClickHouseGenerateFrom: "c_SrcNetworks[longitude]",
+			},
+			{
 				Key:                    ColumnDstGeoCity,
 				ParserType:             "string",
 				ClickHouseType:         "LowCardinality(String)",
 				ClickHouseGenerateFrom: "c_DstNetworks[city]",
+			},
+			{
+				Key:                    ColumnDstGeoLat,
+				ParserType:             "float",
+				ClickHouseType:         "Float64",
+				ClickHouseGenerateFrom: "c_DstNetworks[latitude]",
+			},
+			{
+				Key:                    ColumnDstGeoLon,
+				ParserType:             "float",
+				ClickHouseType:         "Float64",
+				ClickHouseGenerateFrom: "c_DstNetworks[longitude]",
 			},
 			{
 				Key:                    ColumnSrcGeoState,

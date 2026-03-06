@@ -82,6 +82,30 @@ func (g *maxmindGeoInfo) UnmarshalMaxMindDB(d *mmdbdata.Decoder) error {
 					}
 				}
 			}
+		case "location":
+			locationIter, _, err := d.ReadMap()
+			if err != nil {
+				return err
+			}
+			for locationKey, err := range locationIter {
+				if err != nil {
+					return err
+				}
+				if string(locationKey) == "latitude" {
+					latitude, err := d.ReadFloat64()
+					if err != nil {
+						return err
+					}
+					g.Lat = latitude
+				}
+				if string(locationKey) == "longitude" {
+					longitude, err := d.ReadFloat64()
+					if err != nil {
+						return err
+					}
+					g.Lon = longitude
+				}
+			}
 		case "subdivisions":
 			subdivisionsIter, _, err := d.ReadSlice()
 			if err != nil {

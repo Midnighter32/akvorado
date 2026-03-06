@@ -91,6 +91,10 @@ type NetworkAttributes struct {
 	Region string
 	// City is the administrative city where the prefix is located (Paris, London).
 	City string
+	// Lat is the latitude of located prefix.
+	Lat float64
+	// Lon is the longitude of located prefix.
+	Lon float64
 	// State is the first administrative sub-division of the country (Ile-de-france, Alabama)
 	State string
 	// Country is the country of the network (france, italy)

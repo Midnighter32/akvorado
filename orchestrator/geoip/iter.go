@@ -12,6 +12,8 @@ type GeoInfo struct {
 	Country string
 	City    string
 	State   string
+	Lat     float64
+	Lon     float64
 }
 
 // ASNInfo describes ASN data of an ASN database.
