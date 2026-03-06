@@ -42,9 +42,6 @@ jobs:
   build-linux:
     name: 🐧 Test on Linux
     runs-on: ubuntu-latest
-    needs:
-      - build-go
-      - build-js
     permissions:
       contents: read
       actions: write
@@ -131,9 +128,6 @@ jobs:
   build-nix:
     name: ❄️ Build on Nix
     runs-on: ubuntu-latest
-    needs:
-      - build-go
-      - build-js
     permissions:
       contents: read
     steps:
@@ -152,9 +146,6 @@ jobs:
   build-macos:
     name: 🍏 Build and test on macOS
     runs-on: macos-latest
-    needs:
-      - build-go
-      - build-js
     permissions:
       contents: read
     steps:
@@ -181,9 +172,6 @@ jobs:
   e2e:
     name: 🧪 End-to-end testing
     runs-on: ubuntu-latest
-    needs:
-      - build-go
-      - build-js
     permissions:
       contents: read
     env:
@@ -278,76 +266,11 @@ jobs:
           disable_search: true
           fail_ci_if_error: true
 
-  build-go:
-    name: 🔬 Test only Go
-    runs-on: ubuntu-latest
-    needs:
-      - renovatebot
-    if: needs.renovatebot.outputs.package-ecosystem != 'npm'
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup
-      - name: Check go.mod was not modified
-        run: |
-          ! go mod edit -json | jq -r .Go | grep -vPx '1.\d+' || {
-            echo "^^^^ Incorrect go directive in go.mod: use only \`minor.major'."
-            exit 1
-          }
-      - name: Build
-        run: make && ./bin/akvorado version
-      - name: Save IANA files to cache
-        if: steps.setup.outputs.iana-cache-hit != 'true'
-        uses: actions/cache/save@v5
-        with:
-          path: |
-            orchestrator/clickhouse/data/udp.csv
-            orchestrator/clickhouse/data/tcp.csv
-          key: ${{ steps.setup.outputs.iana-cache-key }}
-      - name: Tests
-        run: make test-go
-
-  build-js:
-    name: 🔬 Test only JS
-    runs-on: ubuntu-latest
-    needs:
-      - renovatebot
-    permissions:
-      contents: read
-    strategy:
-      matrix:
-        node-version: [22, 24]
-        renovatebot:
-          - ${{ needs.renovatebot.outputs.package-ecosystem }}
-        exclude:
-          - renovatebot: gomod
-        include:
-          - node-version: 22
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          setup-go: false
-          node-version: ${{ matrix.node-version }}
-      - name: Build and test JS frontend
-        run: make console/data/frontend test-js
-
   licenses:
     name: ⚖️ Check licenses
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    needs:
-      - build-go
-      - build-js
     steps:
       - uses: actions/checkout@v6
         with:
@@ -359,9 +282,6 @@ jobs:
 
   build-docker:
     name: 🐋 Build Docker images
-    needs:
-      - build-go
-      - build-js
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref_type == 'tag'
     permissions:
