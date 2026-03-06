@@ -52,6 +52,8 @@ func (c *Component) networksCSVRefresh() error {
 			State:   data.State,
 			Country: data.Country,
 			City:    data.City,
+			Lat:     data.Lat,
+			Lon:     data.Lon,
 		}
 		networks.Update(subV6Prefix, func(existing NetworkAttributes, _ bool) NetworkAttributes {
 			return mergeNetworkAttrs(existing, attrs)
@@ -127,6 +129,8 @@ func (c *Component) networksCSVRefresh() error {
 			current.Country,
 			current.State,
 			current.City,
+			fmt.Sprint(current.Lat),
+			fmt.Sprint(current.Lon),
 			current.Tenant,
 			asnVal,
 		})
@@ -217,6 +221,12 @@ func mergeNetworkAttrs(existing, newAttrs NetworkAttributes) NetworkAttributes {
 	}
 	if newAttrs.City != "" {
 		existing.City = newAttrs.City
+	}
+	if newAttrs.Lat != 0 {
+		existing.Lat = newAttrs.Lat
+	}
+	if newAttrs.Lon != 0 {
+		existing.Lon = newAttrs.Lon
 	}
 	return existing
 }
