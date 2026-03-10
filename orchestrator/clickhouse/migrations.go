@@ -73,7 +73,7 @@ func (c *Component) migrateDatabase() error {
 				"`proto` UInt8, `type` UInt8, `code` UInt8, `name` String", "proto, type, code")
 		}, func(ctx context.Context) error {
 			return c.createDictionary(ctx, schema.DictionaryNetworks, "ip_trie",
-				"`network` String, `name` String, `role` String, `site` String, `region` String, `city` String, `state` String, `country` String, `tenant` String, `asn` UInt32",
+				"`network` String, `name` String, `role` String, `site` String, `region` String, `city` String, `latitude` Float64, `longitude` Float64, `state` String, `country` String, `tenant` String, `asn` UInt32",
 				"network")
 		}, func(ctx context.Context) error {
 			return c.createDictionary(ctx, schema.DictionaryTCP, "hashed",
