@@ -106,7 +106,7 @@ func (c *Component) networksCSVRefresh() error {
 	// Write a gzip dump to the disk
 	gzipWriter := gzip.NewWriter(tmpfile)
 	csvWriter := csv.NewWriter(gzipWriter)
-	csvWriter.Write([]string{"network", "name", "role", "site", "region", "country", "state", "city", "tenant", "asn"})
+	csvWriter.Write([]string{"network", "name", "role", "site", "region", "country", "state", "city", "latitude", "longitude", "tenant", "asn"})
 	for prefix, leafAttrs := range networks.AllMaybeSorted() {
 		// Merge attributes from root to leaf for hierarchical inheritance.
 		// Supernets() returns in reverse-CIDR order (LPM to root), so we
@@ -120,6 +120,13 @@ func (c *Component) networksCSVRefresh() error {
 		if current.ASN != 0 {
 			asnVal = strconv.Itoa(int(current.ASN))
 		}
+		var latVal, lonVal string
+		if current.Lat != 0 {
+			latVal = fmt.Sprint(current.Lat)
+		}
+		if current.Lon != 0 {
+			lonVal = fmt.Sprint(current.Lon)
+		}
 		csvWriter.Write([]string{
 			prefix.String(),
 			current.Name,
@@ -129,8 +136,8 @@ func (c *Component) networksCSVRefresh() error {
 			current.Country,
 			current.State,
 			current.City,
-			fmt.Sprint(current.Lat),
-			fmt.Sprint(current.Lon),
+			latVal,
+			lonVal,
 			current.Tenant,
 			asnVal,
 		})

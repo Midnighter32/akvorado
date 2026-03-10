@@ -68,8 +68,8 @@ func TestHTTPEndpoints(t *testing.T) {
 			URL:         "/api/v0/orchestrator/clickhouse/networks.csv",
 			ContentType: "text/csv; charset=utf-8",
 			FirstLines: []string{
-				`network,name,role,site,region,country,state,city,tenant,asn`,
-				`::ffff:192.0.2.0/120,infra,,,,,,,,`,
+				`network,name,role,site,region,country,state,city,latitude,longitude,tenant,asn`,
+				`::ffff:192.0.2.0/120,infra,,,,,,,,,,`,
 			},
 		}, {
 			URL:         "/api/v0/orchestrator/clickhouse/custom_dict_none.csv",

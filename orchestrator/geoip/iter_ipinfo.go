@@ -32,6 +32,18 @@ func (g *ipinfoGeoInfo) UnmarshalMaxMindDB(d *mmdbdata.Decoder) error {
 			g.State, err = d.ReadString()
 		case "city":
 			g.City, err = d.ReadString()
+		case "latitude":
+			var latitude string
+			latitude, err = d.ReadString()
+			if err == nil {
+				g.Lat, err = strconv.ParseFloat(latitude, 64)
+			}
+		case "longitude":
+			var longitude string
+			longitude, err = d.ReadString()
+			if err == nil {
+				g.Lon, err = strconv.ParseFloat(longitude, 64)
+			}
 		default:
 			err = d.SkipValue()
 		}

@@ -91,19 +91,23 @@ func (g *maxmindGeoInfo) UnmarshalMaxMindDB(d *mmdbdata.Decoder) error {
 				if err != nil {
 					return err
 				}
-				if string(locationKey) == "latitude" {
+				switch string(locationKey) {
+				case "latitude":
 					latitude, err := d.ReadFloat64()
 					if err != nil {
 						return err
 					}
 					g.Lat = latitude
-				}
-				if string(locationKey) == "longitude" {
+				case "longitude":
 					longitude, err := d.ReadFloat64()
 					if err != nil {
 						return err
 					}
 					g.Lon = longitude
+				default:
+					if err := d.SkipValue(); err != nil {
+						return err
+					}
 				}
 			}
 		case "subdivisions":
